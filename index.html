@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPTV Stream</title>
-  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-plugin@latest/dist/clappr-hlsjs-plugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clappr@0.4.31/dist/clappr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-plugin@0.5.7/dist/clappr-hlsjs-plugin.min.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -58,25 +58,27 @@
       const select = document.getElementById('stream-select');
       const streamId = select.value;
       const proxyUrl = `/stream/${streamId}`;
-      // Destroy existing player if it exists
       if (player) {
         player.destroy();
       }
       try {
+        if (typeof HlsjsPlayback === 'undefined') {
+          throw new Error('HlsjsPlayback plugin not loaded');
+        }
         player = new Clappr.Player({
           source: proxyUrl,
           parentId: '#player',
           width: '100%',
           height: '100%',
           autoPlay: false,
-          plugins: [HlsjsPlayback],
+          plugins: [window.HlsjsPlayback],
           hlsjsConfig: {
             enableWorker: true,
             maxBufferLength: 30
           },
           events: {
             onError: (e) => {
-              document.getElementById('error').textContent = 'Failed to load stream: Check console.';
+              document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console.');
               console.error('Clappr error:', e);
             }
           }
@@ -85,7 +87,12 @@
         document.getElementById('error').textContent = 'Player initialization failed: ' + err.message;
       }
     }
-    changeStream(); // Load the default stream
+    // Check if plugin loaded
+    if (typeof HlsjsPlayback === 'undefined') {
+      document.getElementById('error').textContent = 'HlsjsPlayback plugin failed to load. Check console.';
+    } else {
+      changeStream(); // Load default stream
+    }
   </script>
 </body>
 </html>
