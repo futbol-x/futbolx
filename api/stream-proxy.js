@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     // Map stream IDs to M3U8 URLs
     const streamMap = {
       '47798': 'http://31.220.3.103:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=47798&extension=m3u8',
-      '175': 'https://1rinij81ehes2uswech6drot7durixl2r0.rtgjmfvikmgtgrvkpbg.shop/hN9eS4rZ1wM7fC3vJ0aX8pG2yQ5bUi/720p.m3u8',
+      '175': 'https://epltv1.github.io/tsn1.m3u8',
       '17518': 'https://1rinij81ehes2uswech6drot7durixl2r0.rtgjmfvikmgtgrvkpbg.shop/hN9eS4rZ1wM7fC3vJ0aX8pG2yQ5bUi/720p.m3u8',
       'test': 'https://test-streams.mux.dev/test_001/stream.m3u8' // Public test stream
     };
