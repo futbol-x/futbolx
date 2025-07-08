@@ -3,51 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPTV Stream Test</title>
+  <title>IPTV Stream</title>
   <script src="https://ssl.p.jwpcdn.com/player/v/8.29.0/jwplayer.js"></script>
   <script>jwplayer.key = "XSuP8qMJp7NuX3KzRPiR1r8Zg6s7ZKy3uW5n1Yw=";</script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    html, body {
       margin: 0;
-      padding: 20px;
-      background: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .video-container {
-      width: 100%;
-      max-width: 800px;
-      aspect-ratio: 16 / 9;
-    }
-    #player {
+      padding: 0;
       width: 100%;
       height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    #player {
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
     #error {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
       color: red;
-      margin-top: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      z-index: 1000;
+    }
+    #stream-select {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px;
+      font-size: 16px;
+      z-index: 1000;
+      background: #fff;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <h1>Test IPTV Stream</h1>
-  <div class="video-container">
-    <div id="player">Loading the player...</div>
-  </div>
+  <div id="player"></div>
+  <select id="stream-select" onchange="changeStream()">
+    <option value="47798">Stream 47798</option>
+    <option value="175">Stream 175</option>
+    <option value="17518">Stream 17518</option>
+    <option value="test">Test Stream</option>
+  </select>
   <div id="error"></div>
   <script>
-    const player = jwplayer('player').setup({
-      file: '/api/stream-proxy',
-      type: 'hls',
-      width: '100%',
-      aspectratio: '16:9',
-      autostart: false
-    });
-    player.on('error', (e) => {
-      document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console for details.');
-    });
+    const player = jwplayer('player');
+    function changeStream() {
+      const select = document.getElementById('stream-select');
+      const streamId = select.value;
+      const proxyUrl = `/stream/${streamId}`;
+      player.setup({
+        file: proxyUrl,
+        type: 'hls',
+        width: '100%',
+        height: '100%',
+        autostart: false
+      });
+      player.on('error', (e) => {
+        document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console.');
+      });
+    }
+    changeStream(); // Load the default stream
   </script>
 </body>
 </html>
