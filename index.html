@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPTV Stream Test</title>
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <script src="https://ssl.p.jwpcdn.com/player/v/8.29.0/jwplayer.js"></script>
+  <script>jwplayer.key = "XSuP8qMJp7NuX3KzRPiR1r8Zg6s7ZKy3uW5n1Yw=";</script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -33,24 +34,19 @@
 <body>
   <h1>Test IPTV Stream</h1>
   <div class="video-container">
-    <video id="player" class="video-js" controls preload="auto">
-      <source src="/api/stream-proxy" type="application/x-mpegURL">
-      Your browser does not support the video tag.
-    </video>
+    <div id="player">Loading the player...</div>
   </div>
   <div id="error"></div>
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-  <script src="https://unpkg.com/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js"></script>
   <script>
-    const player = videojs('player', {
-      html5: {
-        hls: {
-          overrideNative: true
-        }
-      }
+    const player = jwplayer('player').setup({
+      file: '/api/stream-proxy',
+      type: 'hls',
+      width: '100%',
+      aspectratio: '16:9',
+      autostart: false
     });
-    player.on('error', () => {
-      document.getElementById('error').textContent = 'Failed to load stream. Check console for details.';
+    player.on('error', (e) => {
+      document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console for details.');
     });
   </script>
 </body>
