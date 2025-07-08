@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/:path*", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/stream-proxy.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  }
+}
