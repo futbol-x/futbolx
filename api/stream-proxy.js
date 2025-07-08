@@ -2,7 +2,25 @@ const axios = require('axios');
 
 module.exports = async (req, res) => {
   try {
-    const streamUrl = 'https://epltv1.github.io/tsn1.m3u8';
+    // Get the stream ID from the URL path (e.g., /stream/175 -> id=175)
+    const streamId = req.query.id || req.path.split('/').pop();
+    if (!streamId) {
+      return res.status(400).json({ error: 'Missing stream ID' });
+    }
+
+    // Map stream IDs to M3U8 URLs
+    const streamMap = {
+      '47798': 'http://31.220.3.103:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=47798&extension=m3u8',
+      '175': 'http://31.220.3.103:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=175&extension=m3u8',
+      '17518': 'http://31.220.3.103:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=17518&extension=m3u8',
+      'test': 'https://test-streams.mux.dev/test_001/stream.m3u8' // Public test stream
+    };
+
+    const streamUrl = streamMap[streamId];
+    if (!streamUrl) {
+      return res.status(404).json({ error: `No stream found for ID ${streamId}` });
+    }
+
     const response = await axios.get(streamUrl, { responseType: 'stream' });
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
