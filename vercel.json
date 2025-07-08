@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/stream/:id", "destination": "/api/stream-proxy" },
     { "source": "/:path*", "destination": "/index.html" }
   ],
   "functions": {
