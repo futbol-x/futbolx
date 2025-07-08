@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPTV Stream</title>
-  <script src="https://ssl.p.jwpcdn.com/player/v/8.29.0/jwplayer.js"></script>
+  <script src="https://cdn.jwplayer.com/libraries/jwplayer.js"></script>
   <script>jwplayer.key = "XSuP8qMJp7NuX3KzRPiR1r8Zg6s7ZKy3uW5n1Yw=";</script>
   <style>
     html, body {
@@ -53,21 +53,27 @@
   </select>
   <div id="error"></div>
   <script>
-    const player = jwplayer('player');
     function changeStream() {
       const select = document.getElementById('stream-select');
       const streamId = select.value;
       const proxyUrl = `/stream/${streamId}`;
-      player.setup({
-        file: proxyUrl,
-        type: 'hls',
-        width: '100%',
-        height: '100%',
-        autostart: false
-      });
-      player.on('error', (e) => {
-        document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console.');
-      });
+      try {
+        jwplayer('player').setup({
+          file: proxyUrl,
+          type: 'hls',
+          width: '100%',
+          height: '100%',
+          autostart: false
+        });
+        jwplayer('player').on('error', (e) => {
+          document.getElementById('error').textContent = 'Failed to load stream: ' + (e.message || 'Check console.');
+        });
+        jwplayer('player').on('setupError', (e) => {
+          document.getElementById('error').textContent = 'Player setup failed: ' + (e.message || 'Check console.');
+        });
+      } catch (err) {
+        document.getElementById('error').textContent = 'Player initialization failed: ' + err.message;
+      }
     }
     changeStream(); // Load the default stream
   </script>
